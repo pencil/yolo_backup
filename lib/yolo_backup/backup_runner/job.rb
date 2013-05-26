@@ -26,6 +26,8 @@ module YOLOBackup
           log "Starting backup of #{server}"
           backend.start_backup
           log "Backup completed" if verbose?
+          log "Cleaning up old backups" if verbose?
+          log "Deleted #{server.cleanup_backups.length} backups" if verbose?
         else
           log "Backup not required (latest backup = #{server.latest_backup}, maximum backup age = #{maximum_backup_age})" if verbose?
         end

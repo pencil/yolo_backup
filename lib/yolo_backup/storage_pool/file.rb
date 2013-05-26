@@ -5,6 +5,8 @@ require 'yolo_backup/storage_pool'
 require 'yolo_backup/core_ext/string'
 
 class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
+  require 'yolo_backup/storage_pool/file/cleaner'
+
   OPTIONS = %w{ path }
 
   attr_accessor :path
@@ -50,7 +52,8 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
   end
 
   def cleanup(server)
-
+    cleaner = Cleaner.new(self, server)
+    cleaner.cleanup
   end
 
   private

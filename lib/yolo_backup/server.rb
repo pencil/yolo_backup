@@ -19,6 +19,10 @@ module YOLOBackup
       storage.latest_backup(self)
     end
 
+    def cleanup_backups
+      storage.cleanup(self)
+    end
+
     def to_s
       name
     end
