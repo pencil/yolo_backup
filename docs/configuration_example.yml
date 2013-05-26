@@ -1,0 +1,24 @@
+storages:
+  default:
+    path: "/var/backups/%{hostname}"
+  external:
+    path: "/mnt/external/backups/%{hostname}"
+
+rotations:
+  default:
+    daily: 10
+    monthly: 12
+    yearly: 3
+  extended:
+    hourly: 24
+    daily: 10
+    monthly: 12
+    yearly: 5
+
+servers:
+  peter:
+    ssh_key: '/home/example/.ssh/id_rsa'
+    rotation: extended
+  nasibisibusi:
+    ssh_key: '/home/example/.ssh/id_dsa'
+    stoarge: external
