@@ -1,5 +1,5 @@
 require 'yolo_backup/storage_pool'
-require 'yolo_backup/string_interpolate'
+require 'yolo_backup/core_ext/string'
 
 class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
   OPTIONS = %w{ path }
@@ -19,6 +19,6 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
 
   private
   def wildcard_path
-    YOLOBackup::StringInterpolate.interpolate path, hostname: '*'
+    path.interpolate :hostname => '*'
   end
 end
