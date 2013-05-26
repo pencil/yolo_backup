@@ -31,6 +31,11 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
     ::File.directory?(base_path) && ::File.readable?(base_path)
   end
 
+  def latest_backup(server)
+    return nil unless ::File.directory?(base_path) && ::File.symlink?("#{base_path}/latest")
+    target = File.readlink("#{base_path}/latest")
+  end
+
   private
   def wildcard_path
     path.interpolate :hostname => '*'
@@ -38,5 +43,9 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
 
   def base_path
     path.interpolate(:hostname => '')
+  end
+
+  def server_path(hostname)
+    path.interpolate(:hostname => hostname)
   end
 end

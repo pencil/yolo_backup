@@ -14,5 +14,9 @@ module YOLOBackup
         send("#{option}=", options[option]) if options.key?(option)
       end
     end
+
+    def latest_backup
+      storage.latest_backup(self)
+    end
   end
 end

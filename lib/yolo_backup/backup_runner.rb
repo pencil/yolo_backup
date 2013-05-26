@@ -1,5 +1,10 @@
+require 'yolo_backup/backup_runner/job'
+require 'yolo_backup/helper/log'
+
 module YOLOBackup
   class BackupRunner
+    include Helper::Log
+
     class Error < StandardError; end
     class UnknownServerError < Error; end
 
@@ -8,6 +13,7 @@ module YOLOBackup
     OPTIONS.each do |option|
       attr_accessor option
     end
+
     alias_method :verbose?, :verbose
 
     def initialize(options)
@@ -16,20 +22,18 @@ module YOLOBackup
       end
     end
 
-    def backup(server = nil)
-      if server.nil?
-        servers.keys.each do |server|
-          backup(server)
+    def backup(server_name = nil)
+      if server_name.nil?
+        servers.keys.each do |server_name|
+          backup(server_name)
         end
       else
-        raise UnknownServerError, "Server #{server} not defined" unless servers.key?(server)
-        verbose_log(server)
+        raise UnknownServerError, "Server #{server_name} not defined" unless servers.key?(server_name)
+        server = servers[server_name]
+        log "Backup of #{server} requested" if verbose?
+        job = Job.new 'server' => server, 'verbose' => verbose?
+        job.start
       end
-    end
-
-    private
-    def verbose_log(msg)
-      puts "[BackupRunner] #{msg}" if verbose?
     end
   end
 end
