@@ -21,5 +21,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov', '~> 0.7'
 
   s.add_dependency 'thor', '~> 0.18'
+  s.add_dependency 'sys-filesystem', '~> 1.1'
 
 end

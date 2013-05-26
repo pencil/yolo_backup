@@ -14,6 +14,14 @@ module YOLOBackup
     def status(storage = nil)
       storage_pools.each do |storage_pool|
         puts "#{storage_pool}:"
+        if storage_pool.ready?
+          storage_pool.statistics.tap do |stats|
+            puts "  Capacity:  #{'%4d' % (stats[:capacity] / 1000 / 1000 / 1000)} GB"
+            puts "  Available: #{'%4d' % (stats[:available] / 1000 / 1000 / 1000)} GB"
+          end
+        else
+          puts "  DEVICE NOT READY" unless storage_pool.ready?
+        end
       end
     end
 
