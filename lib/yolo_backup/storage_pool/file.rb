@@ -1,3 +1,4 @@
+require 'time'
 require 'sys/filesystem'
 
 require 'yolo_backup/storage_pool'
@@ -32,8 +33,24 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
   end
 
   def latest_backup(server)
-    return nil unless ::File.directory?(base_path) && ::File.symlink?("#{base_path}/latest")
-    target = File.readlink("#{base_path}/latest")
+    server_path = server_path(server)
+    return nil unless ::File.directory?(server_path) && ::File.symlink?("#{server_path}/latest")
+    target = ::File.basename(::File.readlink("#{server_path}/latest"))
+    Time.parse(target)
+  end
+
+  def initiate_backup(server, &block)
+    server_path = server_path(server)
+    path = "#{server_path}/#{Time.now.iso8601}/"
+    FileUtils.mkdir_p(path)
+    yield(path)
+    latest_path = "#{server_path}/latest"
+    ::File.unlink(latest_path) if ::File.exists?(latest_path)
+    ::File.symlink(path, latest_path)
+  end
+
+  def cleanup(server)
+
   end
 
   private

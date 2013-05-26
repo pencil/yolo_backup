@@ -18,5 +18,9 @@ module YOLOBackup
     def latest_backup
       storage.latest_backup(self)
     end
+
+    def to_s
+      name
+    end
   end
 end

@@ -14,5 +14,11 @@ module YOLOBackup
         send("#{option}=", options[option]) if options.key?(option)
       end
     end
+
+    def minimum_unit
+      SCHEDULE_OPTIONS.each do |option|
+        return option if send(option).to_i > 0
+      end
+    end
   end
 end

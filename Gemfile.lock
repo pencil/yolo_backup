@@ -2,14 +2,19 @@ PATH
   remote: .
   specs:
     yolo_backup (0.0.0)
+      activesupport (~> 3.2)
       sys-filesystem (~> 1.1)
       thor (~> 0.18)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
+      multi_json (~> 1.0)
     diff-lcs (1.2.4)
     ffi (1.8.1)
+    i18n (0.6.1)
     multi_json (1.7.3)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)

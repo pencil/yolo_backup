@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'thor', '~> 0.18'
   s.add_dependency 'sys-filesystem', '~> 1.1'
+  s.add_dependency 'activesupport', '~> 3.2'
 
 end

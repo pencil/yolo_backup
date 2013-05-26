@@ -1,4 +1,5 @@
 require 'yolo_backup/helper/log'
+require 'yolo_backup/backup_runner/backend/rsync'
 
 module YOLOBackup
   class BackupRunner
@@ -21,13 +22,36 @@ module YOLOBackup
 
       def start
         if backup_required?
+          log "Latest backup (#{server.latest_backup}) is older than maximum backup age (#{maximum_backup_age})" if verbose?
+          log "Starting backup of #{server}"
+          backend.start_backup
         else
-          log "Backup not required (latest backup = #{server.latest_backup})"
+          log "Backup not required (latest backup = #{server.latest_backup}, maximum backup age = #{maximum_backup_age})" if verbose?
         end
       end
 
       def backup_required?
-        false
+        latest_backup = server.latest_backup
+        return latest_backup.nil? || latest_backup < maximum_backup_age
+      end
+
+      def maximum_backup_age
+        case server.rotation.minimum_unit
+        when 'hourly'
+          1.hour.ago
+        when 'daily'
+          1.day.ago
+        when 'weekly'
+          1.week.ago
+        when 'monthly'
+          1.month.ago
+        when 'yearly'
+          1.year.ago
+        end
+      end
+
+      def backend
+        @backend ||= YOLOBackup::BackupRunner::Backend::Rsync.new(server)
       end
     end
   end
