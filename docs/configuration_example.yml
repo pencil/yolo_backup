@@ -15,10 +15,32 @@ rotations:
     monthly: 12
     yearly: 5
 
+exclude_sets:
+  # be sure to define a default exclude set!
+  default:
+    - '/dev/*'
+    - '/proc/*'
+    - '/sys/*'
+    - '/tmp/*'
+    - '/run/*'
+    - '/mnt/*'
+    - '/media/*'
+    - '/lost+found'
+  alternative:
+    - '/dev/*'
+    - '/proc/*'
+    - '/sys/*'
+    - '/run/*'
+    - '/lost+found'
+    - '/var/log/*'
+
 servers:
   peter:
     ssh_key: '/home/example/.ssh/id_rsa'
     rotation: extended
+    excludes: # additional excludes
+      - '/home/dont_backup_this_user/'
   nasibisibusi:
     ssh_key: '/home/example/.ssh/id_dsa'
     storage: external
+    exclude_set: alternative
