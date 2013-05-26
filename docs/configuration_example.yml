@@ -21,4 +21,4 @@ servers:
     rotation: extended
   nasibisibusi:
     ssh_key: '/home/example/.ssh/id_dsa'
-    stoarge: external
+    storage: external

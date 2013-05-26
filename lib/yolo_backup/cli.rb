@@ -3,10 +3,14 @@ require 'yaml'
 
 require 'yolo_backup/storage_pool/file'
 require 'yolo_backup/rotation_plan'
+require 'yolo_backup/backup_runner/rsync'
+require 'yolo_backup/server'
 
 module YOLOBackup
   class CLI < Thor
     DEFAULT_CONFIG_FILE = '/etc/yolo_backup.yml'
+    DEFAULT_STORAGE_POOL_NAME = 'default'
+    DEFAULT_ROTATION_PLAN_NAME = 'default'
 
     class_option :verbose, :type => :boolean
     class_option :config, :type => :string, :banner => "path to config file (default #{DEFAULT_CONFIG_FILE})"
@@ -29,6 +33,7 @@ module YOLOBackup
     desc 'backup [SERVER]', 'Start backup process'
     def backup(server = nil)
       puts 'BACKUP'
+      p servers
       p rotation_plans
     end
 
@@ -55,6 +60,30 @@ module YOLOBackup
           rotation_plans[name] = RotationPlan.new(name, options)
         end
       end
+    end
+
+    def servers
+      return @servers unless @servers.nil?
+
+      (@servers = {}).tap do |servers|
+        config['servers'].each do |name, options|
+          options['storage'] = storage_by_name(options['storage'])
+          options['rotation'] = rotation_by_name(options['rotation'])
+          servers[name] = Server.new(name, options)
+        end
+      end
+    end
+
+    def storage_by_name(name = nil)
+      name ||= DEFAULT_STORAGE_POOL_NAME
+      raise "Storage #{name} not defined" unless storage_pools.key?(name)
+      storage_pools[name]
+    end
+
+    def rotation_by_name(name = nil)
+      name ||= DEFAULT_ROTATION_PLAN_NAME
+      raise "Rotation plan #{name} not defined" unless rotation_plans.key?(name)
+      rotation_plans[name]
     end
   end
 end
