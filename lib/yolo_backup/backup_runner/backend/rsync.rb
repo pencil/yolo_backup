@@ -22,6 +22,7 @@ class YOLOBackup::BackupRunner::Backend::Rsync < YOLOBackup::BackupRunner::Backe
       ssh_options << "-i '#{server.ssh_key}'" unless server.ssh_key.nil?
       ssh_options << "-p '#{server.ssh_port}'" unless server.ssh_port.nil?
       options << "-e \"ssh #{ssh_options.join(' ')}\""
+      options << "--exclude={#{server.excludes.join(',')}}"
       command = "rsync #{options.join(' ')} #{server.ssh_user || 'root'}@#{server.ssh_host || server}:/ '#{path}'"
       puts command
       output = `#{command}`
