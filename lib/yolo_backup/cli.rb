@@ -13,7 +13,7 @@ module YOLOBackup
 
     desc 'status', 'Display backup status and statistics'
     def status(storage = nil)
-      storage_pools.each do |storage_pool|
+      storage_pools.values.each do |storage_pool|
         puts "#{storage_pool}:"
         if storage_pool.ready?
           storage_pool.statistics.tap do |stats|
@@ -40,9 +40,9 @@ module YOLOBackup
     def storage_pools
       return @storage_pools unless @storage_pools.nil?
 
-      (@storage_pools = []).tap do |storage_pools|
+      (@storage_pools = {}).tap do |storage_pools|
         config['storages'].each do |name, options|
-          storage_pools << StoragePool::File.new(name, options)
+          storage_pools[name] = StoragePool::File.new(name, options)
         end
       end
     end
@@ -50,9 +50,9 @@ module YOLOBackup
     def rotation_plans
       return @rotation_plans unless @rotation_plans.nil?
 
-      (@rotation_plans = []).tap do |rotation_plans|
+      (@rotation_plans = {}).tap do |rotation_plans|
         config['rotations'].each do |name, options|
-          rotation_plans << RotationPlan.new(name, options)
+          rotation_plans[name] = RotationPlan.new(name, options)
         end
       end
     end
