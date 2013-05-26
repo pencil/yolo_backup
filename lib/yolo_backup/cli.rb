@@ -34,8 +34,9 @@ module YOLOBackup
     end
 
     desc 'backup [SERVER]', 'Start backup process'
+    option :force, :type => :boolean
     def backup(server = nil)
-      backup_runner = BackupRunner.new('servers' => servers, 'verbose' => verbose?)
+      backup_runner = BackupRunner.new('servers' => servers, 'verbose' => verbose?, 'force' => force?)
       backup_runner.backup(server)
     end
 
@@ -47,6 +48,10 @@ module YOLOBackup
     private
     def verbose?
       !!options[:verbose]
+    end
+
+    def force?
+      !!options[:force]
     end
 
     def config

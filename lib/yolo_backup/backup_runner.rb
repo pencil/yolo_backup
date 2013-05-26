@@ -8,13 +8,14 @@ module YOLOBackup
     class Error < StandardError; end
     class UnknownServerError < Error; end
 
-    OPTIONS = %w{servers verbose}
+    OPTIONS = %w{servers verbose force}
 
     OPTIONS.each do |option|
       attr_accessor option
     end
 
     alias_method :verbose?, :verbose
+    alias_method :force?, :force
 
     def initialize(options)
       OPTIONS.each do |option|
@@ -31,7 +32,7 @@ module YOLOBackup
         raise UnknownServerError, "Server #{server_name} not defined" unless servers.key?(server_name)
         server = servers[server_name]
         log "Backup of #{server} requested" if verbose?
-        job = Job.new 'server' => server, 'verbose' => verbose?
+        job = Job.new 'server' => server, 'verbose' => verbose?, 'force' => force?
         job.start
       end
     end

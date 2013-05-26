@@ -6,13 +6,14 @@ module YOLOBackup
     class Job
       include Helper::Log
 
-      OPTIONS = %w{server verbose}
+      OPTIONS = %w{server verbose force}
 
       OPTIONS.each do |option|
         attr_accessor option
       end
 
       alias_method :verbose?, :verbose
+      alias_method :force?, :force
 
       def initialize(options)
         OPTIONS.each do |option|
@@ -35,7 +36,7 @@ module YOLOBackup
 
       def backup_required?
         latest_backup = server.latest_backup
-        return latest_backup.nil? || latest_backup < maximum_backup_age
+        return force? || latest_backup.nil? || latest_backup < maximum_backup_age
       end
 
       def maximum_backup_age
