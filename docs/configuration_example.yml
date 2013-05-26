@@ -6,11 +6,11 @@ storages:
 
 rotations:
   default:
-    daily: 10
-    monthly: 12
-    yearly: 3
+    daily: 10   # keep up to 10 daily backups
+    monthly: 12 # keep up to 12 monthly backups
+    yearly: 3   # keep up to 3 yearly backups
   extended:
-    hourly: 24
+    hourly: 24  # keep up to 24 hourly backups
     daily: 10
     monthly: 12
     yearly: 5
