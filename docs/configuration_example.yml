@@ -36,7 +36,7 @@ exclude_sets:
 
 servers:
   peter:
-    ssh_key: '/home/example/.ssh/id_rsa'
+    ssh_port: 2222
     rotation: extended
     excludes: # additional excludes
       - '/home/dont_backup_this_user/'

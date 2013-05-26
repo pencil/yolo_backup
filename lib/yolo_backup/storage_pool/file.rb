@@ -44,7 +44,6 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
   def initiate_backup(server, &block)
     server_path = server_path(server)
     path = "#{server_path}/#{Time.now.iso8601}/"
-    FileUtils.mkdir_p(path)
     yield(path)
     latest_path = "#{server_path}/latest"
     ::File.unlink(latest_path) if ::File.symlink?(latest_path)

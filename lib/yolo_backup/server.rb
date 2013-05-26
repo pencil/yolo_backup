@@ -1,6 +1,6 @@
 module YOLOBackup
   class Server
-    OPTIONS = %w{ excludes rotation ssh_host ssh_key storage }
+    OPTIONS = %w{ excludes rotation ssh_host ssh_key ssh_port ssh_user storage }
 
     OPTIONS.each do |option|
       attr_accessor option
