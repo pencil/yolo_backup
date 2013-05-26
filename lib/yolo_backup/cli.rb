@@ -2,6 +2,7 @@ require 'thor'
 require 'yaml'
 
 require 'yolo_backup/storage_pool/file'
+require 'yolo_backup/rotation_plan'
 
 module YOLOBackup
   class CLI < Thor
@@ -28,6 +29,7 @@ module YOLOBackup
     desc 'backup [SERVER]', 'Start backup process'
     def backup(server = nil)
       puts 'BACKUP'
+      p rotation_plans
     end
 
     private
@@ -41,6 +43,16 @@ module YOLOBackup
       (@storage_pools = []).tap do |storage_pools|
         config['storages'].each do |name, options|
           storage_pools << StoragePool::File.new(name, options)
+        end
+      end
+    end
+
+    def rotation_plans
+      return @rotation_plans unless @rotation_plans.nil?
+
+      (@rotation_plans = []).tap do |rotation_plans|
+        config['rotations'].each do |name, options|
+          rotation_plans << RotationPlan.new(name, options)
         end
       end
     end
