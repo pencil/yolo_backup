@@ -1,6 +1,7 @@
 require 'thor'
 require 'yaml'
 
+require 'yolo_backup'
 require 'yolo_backup/storage_pool/file'
 require 'yolo_backup/rotation_plan'
 require 'yolo_backup/backup_runner'
@@ -36,6 +37,11 @@ module YOLOBackup
     def backup(server = nil)
       backup_runner = BackupRunner.new('servers' => servers, 'verbose' => verbose?)
       backup_runner.backup(server)
+    end
+
+    desc 'version', 'Display yolo_backup version'
+    def version
+      puts "yolo_backup #{YOLOBackup::VERSION}"
     end
 
     private
