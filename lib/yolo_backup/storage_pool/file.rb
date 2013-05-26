@@ -36,7 +36,7 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
 
   def latest_backup(server)
     server_path = server_path(server)
-    return nil unless ::File.directory?(server_path) && ::File.symlink?("#{server_path}/latest")
+    return nil unless ::File.directory?(server_path) && ::File.symlink?("#{server_path}/latest") && ::File.directory?("#{server_path}/latest")
     target = ::File.basename(::File.readlink("#{server_path}/latest"))
     Time.parse(target)
   end
@@ -47,7 +47,7 @@ class YOLOBackup::StoragePool::File < YOLOBackup::StoragePool
     FileUtils.mkdir_p(path)
     yield(path)
     latest_path = "#{server_path}/latest"
-    ::File.unlink(latest_path) if ::File.exists?(latest_path)
+    ::File.unlink(latest_path) if ::File.symlink?(latest_path)
     ::File.symlink(path, latest_path)
   end
 
