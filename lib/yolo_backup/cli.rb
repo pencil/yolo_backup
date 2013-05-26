@@ -3,7 +3,7 @@ require 'yaml'
 
 require 'yolo_backup/storage_pool/file'
 require 'yolo_backup/rotation_plan'
-require 'yolo_backup/backup_runner/rsync'
+require 'yolo_backup/backup_runner'
 require 'yolo_backup/server'
 
 module YOLOBackup
