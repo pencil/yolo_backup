@@ -1,7 +1,7 @@
 require 'yolo_backup/backup_runner/backend'
 
 class YOLOBackup::BackupRunner::Backend::Rsync < YOLOBackup::BackupRunner::Backend
-  class Error < StandardError; end
+  class RsyncFailedError < Error; end
 
   DEFAULT_RSYNC_OPTIONS = '-aAX --numeric-ids'
 
@@ -24,9 +24,8 @@ class YOLOBackup::BackupRunner::Backend::Rsync < YOLOBackup::BackupRunner::Backe
       options << "-e \"ssh #{ssh_options.join(' ')}\""
       options << "--exclude={#{server.excludes.join(',')}}"
       command = "rsync #{options.join(' ')} #{server.ssh_user || 'root'}@#{server.ssh_host || server}:/ '#{path}'"
-      puts command
-      output = `#{command}`
-      raise Error, "rsync command failed: #{$?}" unless $?.success?
+      `#{command}`
+      raise RsyncFailedError, "rsync command failed: #{$?}" unless $?.success?
     end
   end
 end
