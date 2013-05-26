@@ -32,12 +32,15 @@ module YOLOBackup
 
     desc 'backup [SERVER]', 'Start backup process'
     def backup(server = nil)
-      puts 'BACKUP'
-      p servers
-      p rotation_plans
+      backup_runner = BackupRunner.new('servers' => servers, 'verbose' => verbose?)
+      backup_runner.backup(server)
     end
 
     private
+    def verbose?
+      !!options[:verbose]
+    end
+
     def config
       @config ||= YAML::load(File.open(options[:config] || DEFAULT_CONFIG_FILE))
     end
