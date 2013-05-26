@@ -25,6 +25,7 @@ module YOLOBackup
           log "Latest backup (#{server.latest_backup}) is older than maximum backup age (#{maximum_backup_age})" if verbose?
           log "Starting backup of #{server}"
           backend.start_backup
+          log "Backup completed" if verbose?
         else
           log "Backup not required (latest backup = #{server.latest_backup}, maximum backup age = #{maximum_backup_age})" if verbose?
         end
