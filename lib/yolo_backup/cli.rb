@@ -5,12 +5,14 @@ require 'yolo_backup/storage_pool/file'
 require 'yolo_backup/rotation_plan'
 require 'yolo_backup/backup_runner'
 require 'yolo_backup/server'
+require 'yolo_backup/exclude_set'
 
 module YOLOBackup
   class CLI < Thor
     DEFAULT_CONFIG_FILE = '/etc/yolo_backup.yml'
     DEFAULT_STORAGE_POOL_NAME = 'default'
     DEFAULT_ROTATION_PLAN_NAME = 'default'
+    DEFAULT_EXCLUDE_SET_NAME = 'default'
 
     class_option :verbose, :type => :boolean
     class_option :config, :type => :string, :banner => "path to config file (default #{DEFAULT_CONFIG_FILE})"
@@ -65,6 +67,16 @@ module YOLOBackup
       end
     end
 
+    def exclude_sets
+      return @exclude_sets unless @exclude_sets.nil?
+
+      (@exclude_sets = {}).tap do |exclude_sets|
+        config['exclude_sets'].each do |name, options|
+          exclude_sets[name] = ExcludeSet.new(name, options)
+        end
+      end
+    end
+
     def servers
       return @servers unless @servers.nil?
 
@@ -72,6 +84,7 @@ module YOLOBackup
         config['servers'].each do |name, options|
           options['storage'] = storage_by_name(options['storage'])
           options['rotation'] = rotation_by_name(options['rotation'])
+          options['excludes'] = (options['excludes'] || []) + exlude_set_by_name(options['exclude_set']).excludes
           servers[name] = Server.new(name, options)
         end
       end
@@ -87,6 +100,12 @@ module YOLOBackup
       name ||= DEFAULT_ROTATION_PLAN_NAME
       raise "Rotation plan #{name} not defined" unless rotation_plans.key?(name)
       rotation_plans[name]
+    end
+
+    def exlude_set_by_name(name = nil)
+      name ||= DEFAULT_EXCLUDE_SET_NAME
+      raise "Exclude set #{name} not defined" unless exclude_sets.key?(name)
+      exclude_sets[name]
     end
   end
 end

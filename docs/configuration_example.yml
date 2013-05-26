@@ -41,6 +41,7 @@ servers:
     excludes: # additional excludes
       - '/home/dont_backup_this_user/'
   nasibisibusi:
+    ssh_host: 'nasi.bisi.busi.example.com'
     ssh_key: '/home/example/.ssh/id_dsa'
     storage: external
     exclude_set: alternative
