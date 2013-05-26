@@ -25,7 +25,7 @@ module YOLOBackup
             puts "  Available: #{'%4d' % (stats[:available] / 1000 / 1000 / 1000)} GB"
           end
         else
-          puts "  DEVICE NOT READY" unless storage_pool.ready?
+          puts "  STORAGE NOT READY" unless storage_pool.ready?
         end
       end
     end
